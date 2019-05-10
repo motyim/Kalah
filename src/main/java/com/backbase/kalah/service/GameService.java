@@ -34,7 +34,7 @@ public class GameService {
 
     public GamePlayResponse play(int gameId, int pitId){
         Game game = map.get(gameId);
-        game.play(pitId);
+        game.play(pitId-1);
 
         GamePlayResponse response = new GamePlayResponse();
         response.setId(gameId);
