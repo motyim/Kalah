@@ -1,14 +1,25 @@
 package com.backbase.kalah.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
-@Data
-@AllArgsConstructor
+@Getter
 public class ErrorDetails {
-    private LocalDateTime timestamp;
-    private String message;
-    private String details;
+    private final LocalDateTime timestamp;
+    private final String message;
+    private final HttpStatus status;
+
+    private ErrorDetails(String message, HttpStatus status) {
+        this.status = status;
+        this.message = message;
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public static ErrorDetails of(final String message,
+                                       HttpStatus status){
+        return new ErrorDetails(message, status);
+    }
+
 }

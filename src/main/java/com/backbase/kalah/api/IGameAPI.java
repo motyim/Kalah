@@ -16,15 +16,15 @@ import javax.validation.constraints.Min;
 
 
 @Validated
-@Api(value = "Game API")
+@Api(value = "GameEngine API")
 public interface IGameAPI {
 
     @PostMapping("games")
-    @ApiOperation(value = "Create Game", nickname = "CreateGame", notes = "Create new game and get its unique id")
+    @ApiOperation(value = "Create GameEngine", nickname = "CreateGame", notes = "Create new game and get its unique id")
     ResponseEntity<GameResponse> createGame();
 
     @PutMapping("games/{gameId}/pits/{pitId}")
-    @ApiOperation(value = "Play Game", nickname = "PlayGame", notes = "play a turn in game using game id and house pit id")
+    @ApiOperation(value = "Play GameEngine", nickname = "PlayGame", notes = "play a turn in game using game id and house pit id")
     ResponseEntity<GamePlayResponse> playGame(@PathVariable @Min(1) @Max(999) int gameId,
                                                      @PathVariable @Min(1) @Max(13) int pitId);
 }

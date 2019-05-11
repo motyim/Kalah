@@ -10,7 +10,7 @@ public class GameTest {
 
     @Test
     public void testSimpleMove(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         game.play(0);
         int [] result = {0,7,7,7,7,7,1,6,6,6,6,6,6,0};
         assertArrayEquals(result,game.getHouses());
@@ -18,7 +18,7 @@ public class GameTest {
 
     @Test
     public void testTwoSimpleMoveForTwoPlayers(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         game.play(1);
         game.play(8);
         int [] result = {7,0,7,7,7,7,1,7,0,7,7,7,7,1};
@@ -28,7 +28,7 @@ public class GameTest {
 
     @Test
     public void testTwoSimpleMoveForOnePlayer(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         game.play(0);
         game.play(1);
         int [] result = {0,0,8,8,8,8,2,7,7,6,6,6,6,0};
@@ -37,14 +37,14 @@ public class GameTest {
 
     @Test(expected = RuntimeException.class)
     public void testTwoMoveForOnePlayerException(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         game.play(1);
         game.play(2);
     }
 
     @Test
     public void testNotToPutInOppositeMainHouse(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         game.play(5);
         game.play(11);
         game.play(4);
@@ -58,7 +58,7 @@ public class GameTest {
 
     @Test
     public void testCaptionOppositeHouse(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         game.play(3);
         game.play(7);
         game.play(4);
@@ -72,7 +72,7 @@ public class GameTest {
 
     @Test(expected = RuntimeException.class)
     public void testFullGame(){
-        Game game = new Game();
+        GameEngine game = new GameEngine();
         int [] result;
         game.play(0);game.play(5);
         game.play(7);

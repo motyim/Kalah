@@ -30,7 +30,7 @@ public class SwaggerConfig {
     private ApiInfo metaDate() {
         return new ApiInfoBuilder()
                 .title("kalah")
-                .description("Project for simulate Kalah Game")
+                .description("Project for simulate Kalah GameEngine")
                 .version("1.0.0")
                 .license("Apache License Version 2.0")
                 .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")

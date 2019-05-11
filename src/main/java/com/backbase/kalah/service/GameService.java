@@ -3,7 +3,7 @@ package com.backbase.kalah.service;
 import com.backbase.kalah.dto.GamePlayResponse;
 import com.backbase.kalah.dto.GameResponse;
 import com.backbase.kalah.exception.GameException;
-import com.backbase.kalah.model.Game;
+import com.backbase.kalah.model.GameEngine;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +15,9 @@ import java.util.stream.IntStream;
 @Service
 public class GameService {
 
-    private HashMap <Integer , Game> map ;
+    private HashMap <Integer , GameEngine> map ;
 
-    @Value("${kalah.uri}")
+    @Value("${app.uri}")
     private String URI ;
 
     GameService(){
@@ -27,7 +27,7 @@ public class GameService {
     public GameResponse createGame(){
 
         int gameId = generateGameID();
-        map.put(gameId , new Game());
+        map.put(gameId , new GameEngine());
 
         GameResponse gameResponse = new GameResponse();
         gameResponse.setId(gameId);
@@ -38,8 +38,8 @@ public class GameService {
 
     public GamePlayResponse play(int gameId, int pitId){
         if(!map.containsKey(gameId))
-            throw new GameException("No Game with Id " + gameId);
-        Game game = map.get(gameId);
+            throw new GameException("No GameEngine with Id " + gameId);
+        GameEngine game = map.get(gameId);
 
         if(pitId > 14 ||  pitId < 1)
             throw new GameException("Invalid move with pitId "+ pitId);
