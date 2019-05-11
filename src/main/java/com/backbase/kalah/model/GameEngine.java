@@ -19,11 +19,9 @@ public class GameEngine {
 
     public void play(int pitId) {
 
-        //Rule 1
         if(isGameFinished())
             throw new GameException("GameEngine Finished And Result is "+ result);
 
-        //check turn
         inPlayerTurnRange(pitId);
 
         int i ;
