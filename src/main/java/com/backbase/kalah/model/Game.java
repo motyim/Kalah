@@ -1,55 +1,57 @@
 package com.backbase.kalah.model;
 
+import com.backbase.kalah.exception.GameException;
+
 import java.util.Arrays;
 
 public class Game {
 
     private int [] houses ;
-    private boolean playerOneTurn = true ;
-    private boolean playerTwoTurn = false ;
-    private final static int PLAYER_ONE_HOUSE = 6;
-    private final static int PLAYER_TWO_HOUSE = 13;
-    private String result = null;
+    private boolean playerOneTurn ;
+    private boolean playerTwoTurn ;
+    private final int PLAYER_ONE_HOUSE = 6;
+    private final int PLAYER_TWO_HOUSE = 13;
+    private final int TOTAL_HOUSES = 14;
+    private String result;
 
     public Game(){
-        houses = new int[14];
+        houses = new int[TOTAL_HOUSES];
         //fill array with 6
         Arrays.fill(houses,6);
         // empty the main houses
-        houses[6] = 0;
-        houses[13] = 0;
+        houses[PLAYER_ONE_HOUSE] = 0;
+        houses[PLAYER_TWO_HOUSE] = 0;
+        playerOneTurn = true;
     }
 
 
     public void play(int pitId) {
-        if(result != null)
-            throw new RuntimeException("Game Finsih And Result is "+ result);
-        int i ;
+
+        if(isGameFinished())
+            throw new GameException("Game Finished And Result is "+ result);
+
         //check turn
         inPlayerTurnRange(pitId);
+
+        int i ;
         int seeds = houses[pitId];
         houses[pitId] = 0 ;
-        for ( i = pitId+1; seeds > 0 ; i++) {
-            //not put on opposite hole
-            if(i%14 == PLAYER_ONE_HOUSE && playerTwoTurn) continue;
-            if(i%14 == PLAYER_TWO_HOUSE && playerOneTurn) continue;
 
-            houses[i%14]++;
+        for ( i = pitId+1; seeds > 0 ; i++) {
+
+            if(isWillPutOnOppositeHouse(i)) continue;
+
+            houses[i%TOTAL_HOUSES]++;
             seeds--;
-            //last move & last index i put in & opposite have value
-            if(seeds==0
-                    && i%14 != PLAYER_ONE_HOUSE
-                    && i%14 != PLAYER_TWO_HOUSE
-                    && inPlayerHouses(i%14 , pitId)
-                    && houses[i%14] == 1
-                    && houses[12-(i%14)] != 0){
+
+            if(isLastStoneInOwnEmptyPit(pitId, i, seeds)){
                 if(playerOneTurn){
-                    houses[PLAYER_ONE_HOUSE]+= houses[i%14]+houses[12-(i%14)];
+                    houses[PLAYER_ONE_HOUSE]+= houses[i%TOTAL_HOUSES]+houses[12-(i%TOTAL_HOUSES)];
                 }else{
-                    houses[PLAYER_TWO_HOUSE]+= houses[i%14]+houses[12-(i%14)];
+                    houses[PLAYER_TWO_HOUSE]+= houses[i%TOTAL_HOUSES]+houses[12-(i%TOTAL_HOUSES)];
                 }
-                houses[i%14] = 0;
-                houses[12-(i%14)]=0;
+                houses[i%TOTAL_HOUSES] = 0;
+                houses[12-(i%TOTAL_HOUSES)]=0;
             }
         }
 
@@ -59,6 +61,23 @@ public class Game {
         }
 
         changeTurn(i-1);
+    }
+
+    private boolean isLastStoneInOwnEmptyPit(int pitId, int i, int seeds) {
+        return seeds==0
+                && i%TOTAL_HOUSES != PLAYER_ONE_HOUSE
+                && i%TOTAL_HOUSES != PLAYER_TWO_HOUSE
+                && inPlayerHouses(i%TOTAL_HOUSES , pitId)
+                && houses[i%TOTAL_HOUSES] == 1
+                && houses[12-(i%TOTAL_HOUSES)] != 0;
+    }
+
+    private boolean isWillPutOnOppositeHouse(int i) {
+        return (i%TOTAL_HOUSES == PLAYER_ONE_HOUSE && playerTwoTurn) || (i%TOTAL_HOUSES == PLAYER_TWO_HOUSE && playerOneTurn);
+    }
+
+    private boolean isGameFinished() {
+        return result != null;
     }
 
     private void finishGame() {
@@ -90,9 +109,9 @@ public class Game {
     }
 
     private void inPlayerTurnRange(int pitId) {
-        if(playerOneTurn  && pitId > 5)
+        if(playerOneTurn  && pitId >= PLAYER_ONE_HOUSE)
             throw new RuntimeException("is player two turn");
-        else if ( playerTwoTurn  && ( pitId >12 || pitId <7 ))
+        else if ( playerTwoTurn  &&  pitId < PLAYER_ONE_HOUSE )
             throw new RuntimeException("is player one turn");
     }
 

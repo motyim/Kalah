@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @ControllerAdvice
 @Slf4j
@@ -18,7 +18,7 @@ public class GameExceptionHandler extends ResponseEntityExceptionHandler {
 //    handle validation exception on primitive params
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorDetails> constraintViolationHandler(ConstraintViolationException ex) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Bad Request",
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), "Bad Request",
                 ex.getConstraintViolations().iterator().next().getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
@@ -26,7 +26,7 @@ public class GameExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(GameException.class)
     protected ResponseEntity<ErrorDetails> hangleGameException(GameException ex){
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), "Bad Request",
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), "Bad Request",
                 ex.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
