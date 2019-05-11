@@ -2,10 +2,11 @@ package com.backbase.kalah.service;
 
 import com.backbase.kalah.dto.GamePlayResponse;
 import com.backbase.kalah.dto.GameResponse;
+import com.backbase.kalah.exception.GameException;
 import com.backbase.kalah.model.Game;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -13,11 +14,12 @@ import java.util.Random;
 public class GameService {
 
     private HashMap <Integer , Game> map ;
-    private final static String URI = "http://localhost:8080/games/";
+
+    @Value("${kalah.uri}")
+    private String URI ;
 
     GameService(){
-        System.out.println("new noe");
-        map = new HashMap<Integer, Game>();
+        map = new HashMap<>();
     }
 
     public GameResponse createGame(){
@@ -33,7 +35,12 @@ public class GameService {
     }
 
     public GamePlayResponse play(int gameId, int pitId){
+        if(!map.containsKey(gameId))
+            throw new GameException("No Game with Id " + gameId);
         Game game = map.get(gameId);
+
+        if(pitId > 14 ||  pitId < 1)
+            throw new GameException("Invalid move with pitId "+ pitId);
         game.play(pitId-1);
 
         GamePlayResponse response = new GamePlayResponse();

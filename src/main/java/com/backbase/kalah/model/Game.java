@@ -1,6 +1,5 @@
 package com.backbase.kalah.model;
 
-
 import java.util.Arrays;
 
 public class Game {
