@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 @Service
 public class GameService {
@@ -46,8 +48,16 @@ public class GameService {
         GamePlayResponse response = new GamePlayResponse();
         response.setId(gameId);
         response.setUri(URI+gameId);
-        response.setStatus(game.getHouses());
+        Map<Integer,String> statusMap = mappingStatus(game.getHouses());
+        response.setStatus(statusMap);
         return response;
+    }
+
+    private Map<Integer, String> mappingStatus(int[] houses) {
+        Map<Integer,String> statusMap = new HashMap<>();
+        IntStream.range(0,houses.length)
+                .forEach(i-> statusMap.put(i+1,Integer.toString(houses[i])));
+        return statusMap;
     }
 
     private int generateGameID() {
